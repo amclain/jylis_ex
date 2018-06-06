@@ -11,8 +11,15 @@ defmodule JylisEx.MixProject do
       name:              "jylis_ex",
       description:       description(),
       start_permanent:   Mix.env() == :prod,
-      preferred_cli_env: [espec: :test],
-      aliases:           [test: "espec"],
+      aliases:           [test: "coveralls"],
+      test_coverage:     [tool: ExCoveralls, test_task: "espec"],
+      preferred_cli_env: [
+        "espec":            :test,
+        "coveralls":        :test,
+        "coveralls.detail": :test,
+        "coveralls.post":   :test,
+        "coveralls.html":   :test,
+      ],
     ]
   end
 
@@ -28,10 +35,9 @@ defmodule JylisEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
-      {:espec,  "~> 1.5.1", only: :test},
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:espec,       "~> 1.5.1", only: :test},
+      {:excoveralls, "~> 0.8.2", only: :test},
+      {:ex_doc,      ">= 0.0.0", only: :dev},
     ]
   end
 
