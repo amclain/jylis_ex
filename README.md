@@ -14,18 +14,12 @@ An idiomatic library for connecting an Elixir project to a
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `jylis_ex` to your list of dependencies in `mix.exs`:
+Add the `:jylis_ex` dependency to your `mix.exs` file:
 
 ```elixir
-def deps do
-  [
-    {:jylis_ex, "~> 0.1.0"}
-  ]
+defp deps() do
+  [{:jylis_ex, ">= 0.0.0"}]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/jylis_ex](https://hexdocs.pm/jylis_ex).
-
+Run `mix deps.get` to get the new dependency.
