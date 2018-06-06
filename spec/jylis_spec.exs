@@ -16,6 +16,8 @@ defmodule Jylis.Spec do
         end)
 
         Jylis.start_link(server_uri()) |> should(eq {:ok, self()})
+
+        expect(Redix).to accepted(:start_link)
       end
 
       describe "defaults to port 6379" do
@@ -30,6 +32,8 @@ defmodule Jylis.Spec do
           end)
 
           Jylis.start_link(server_uri()) |> should(eq {:ok, self()})
+
+          expect(Redix).to accepted(:start_link)
         end
       end
 
@@ -45,6 +49,8 @@ defmodule Jylis.Spec do
           end)
 
           Jylis.start_link(server_uri()) |> should(eq {:ok, self()})
+
+          expect(Redix).to accepted(:start_link)
         end
       end
 
