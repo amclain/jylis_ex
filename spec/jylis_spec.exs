@@ -71,4 +71,23 @@ defmodule Jylis.Spec do
       end
     end
   end
+
+  describe "query" do
+    let :connection, do: self()
+    let :command,    do: ["MVREG", "GET", "temperature"]
+    let :value,      do: 25
+
+    specify do
+      allow(Redix).to accept(:command, fn(conn, cmd) ->
+        conn |> should(eq self())
+        cmd  |> should(eq command())
+
+        {:ok, value()}
+      end)
+
+      Jylis.query(connection(), command()) |> should(eq {:ok, value()})
+
+      expect(Redix).to accepted(:command)
+    end
+  end
 end

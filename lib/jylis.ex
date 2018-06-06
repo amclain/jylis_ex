@@ -26,6 +26,19 @@ defmodule Jylis do
     end
   end
 
+  @doc """
+  Make a query to the database.
+
+  `command` - A `List` of command parameters. The command follows the format
+    specified for a function in the Jylis [data types](https://jemc.github.io/jylis/docs/types/)
+    documentation.
+
+  Returns `{:ok, result}` on success.
+  """
+  def query(connection, command) do
+    connection |> Redix.command(command)
+  end
+
   defp validate_uri(server_uri) do
     cond do
       (server_uri.scheme || "") |> String.downcase != "jylis" ->
