@@ -47,6 +47,30 @@ Timestamped Register <sup>[[link](https://jemc.github.io/jylis/docs/types/treg/)
 # {:ok, {"80", 1528082143}}
 ```
 
+### TLOG
+
+Timestamped Log <sup>[[link](https://jemc.github.io/jylis/docs/types/tlog/)]</sup>
+
+```elixir
+{:ok, _} = connection |> Jylis.TLOG.ins("temperature", 68.8, 1528082150)
+{:ok, _} = connection |> Jylis.TLOG.ins("temperature", 70.1, 1528082160)
+{:ok, _} = connection |> Jylis.TLOG.ins("temperature", 73.6, 1528082170)
+
+{:ok, size} = connection |> Jylis.TLOG.size("temperature")
+# {:ok, 3}
+
+{:ok, items} = connection |> Jylis.TLOG.get("temperature")
+# {:ok, [{"73.6", 1528082170}, {"70.1", 1528082160}, {"68.8", 1528082150}]}
+
+{:ok, _} = connection |> Jylis.TLOG.trim("temperature", 1)
+
+{:ok, items} = connection |> Jylis.TLOG.get("temperature")
+# {:ok, [{"73.6", 1528082170}]}
+
+{:ok, _} = connection |> Jylis.TLOG.cutoff("temperature")
+# {:ok, 1528082170}
+```
+
 ### GCOUNT
 
 Grow-Only Counter <sup>[[link](https://jemc.github.io/jylis/docs/types/gcount/)]</sup>
