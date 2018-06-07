@@ -105,3 +105,32 @@ Multi-Value Register <sup>[[link](https://jemc.github.io/jylis/docs/types/mvreg/
 {:ok, value} = connection |> Jylis.MVREG.get("thermostat")
 # {:ok, ["68"]}
 ```
+
+### UJSON
+
+Unordered JSON <sup>[[link](https://jemc.github.io/jylis/docs/types/ujson/)]</sup>
+
+```elixir
+{:ok, _} = connection |> Jylis.UJSON.set(["users", "alice"], %{admin: false})
+{:ok, _} = connection |> Jylis.UJSON.set(["users", "brett"], %{admin: false})
+{:ok, _} = connection |> Jylis.UJSON.set(["users", "carol"], %{admin: true})
+
+{:ok, users} = connection |> Jylis.UJSON.get("users")
+# {:ok,
+#  %{
+#    "alice" => %{"admin" => false},
+#    "brett" => %{"admin" => false},
+#    "carol" => %{"admin" => true}
+#  }}
+
+{:ok, _} = connection |> Jylis.UJSON.ins(["users", "brett", "banned"], true)
+
+{:ok, _} = connection |> Jylis.UJSON.clr(["users", "alice"])
+
+{:ok, users} = connection |> Jylis.UJSON.get("users")
+# {:ok,
+#  %{
+#    "brett" => %{"admin" => false, "banned" => true},
+#    "carol" => %{"admin" => true}
+#  }}
+```

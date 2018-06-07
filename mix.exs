@@ -36,6 +36,7 @@ defmodule JylisEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:poison,      "~> 3.1.0"},
       {:redix,       "~> 0.7.1"},
       {:espec,       "~> 1.5.1", only: :test},
       {:excoveralls, "~> 0.8.2", only: :test},
