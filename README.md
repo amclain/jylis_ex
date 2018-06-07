@@ -48,6 +48,18 @@ Grow-Only Counter <sup>[[link](https://jemc.github.io/jylis/docs/types/gcount/)]
 # {:ok, 15}
 ```
 
+### PNCOUNT
+
+Positive/Negative Counter <sup>[[link](https://jemc.github.io/jylis/docs/types/pncount/)]</sup>
+
+```elixir
+{:ok, _} = connection |> Jylis.PNCOUNT.inc("subscribers", 3)
+{:ok, _} = connection |> Jylis.PNCOUNT.dec("subscribers", 1)
+
+{:ok, value} = connection |> Jylis.PNCOUNT.get("subscribers")
+# {:ok, 2}
+```
+
 ### MVREG
 
 Multi-Value Register <sup>[[link](https://jemc.github.io/jylis/docs/types/mvreg/)]</sup>
