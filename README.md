@@ -36,6 +36,17 @@ of the database host to connect to. The `port` is optional and defaults to
 
 ## Queries
 
+### TREG
+
+Timestamped Register <sup>[[link](https://jemc.github.io/jylis/docs/types/treg/)]</sup>
+
+```elixir
+{:ok, _} = connection |> Jylis.TREG.set("lamp_brightness", 80, 1528082143)
+
+{:ok, result} = connection |> Jylis.TREG.get("lamp_brightness")
+# {:ok, {"80", 1528082143}}
+```
+
 ### GCOUNT
 
 Grow-Only Counter <sup>[[link](https://jemc.github.io/jylis/docs/types/gcount/)]</sup>
