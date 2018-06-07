@@ -8,6 +8,7 @@ defmodule JylisEx.MixProject do
       elixir:            "~> 1.6",
       package:           package(),
       deps:              deps(),
+      docs:              docs(),
       name:              "jylis_ex",
       description:       description(),
       start_permanent:   Mix.env() == :prod,
@@ -40,7 +41,14 @@ defmodule JylisEx.MixProject do
       {:redix,       "~> 0.7.1"},
       {:espec,       "~> 1.5.1", only: :test},
       {:excoveralls, "~> 0.8.2", only: :test},
-      {:ex_doc,      ">= 0.0.0", only: :dev},
+      {:ex_doc,      ">= 0.0.0", only: :dev, runtime: false},
+    ]
+  end
+
+  defp docs do
+    [
+      main:   "Jylis",
+      extras: ["README.md"]
     ]
   end
 
