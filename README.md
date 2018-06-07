@@ -36,6 +36,33 @@ of the database host to connect to. The `port` is optional and defaults to
 
 ## Queries
 
+This library aims to be idiomatic with both Elixir and Jylis. Therefore, the
+syntax of the queries closely match the [Jylis documentation](https://jemc.github.io/jylis/docs/types/)
+and ideally it should feel natural to you, an Elixir programmer.
+
+For example, take the case of a Jylis query to set a value for a
+[`UJSON`](https://jemc.github.io/jylis/docs/types/ujson/#set-key-key-ujson) key:
+
+```text
+UJSON SET fruit apple '{"color": "red", "ripe": true}'
+```
+
+Using this library, the query looks like this:
+
+```elixir
+connection |> Jylis.UJSON.set(["fruit", "apple"], %{color: "red", ripe: true})
+```
+
+The format for a query is:
+
+```text
+Jylis.<data_type>.<function>(key(s), value?, timestamp?)
+```
+
+However, be sure to consult the [API documentation](https://hexdocs.pm/jylis_ex)
+or the [Jylis documentation](https://jemc.github.io/jylis/docs/types/) for the
+exact format of your particular query.
+
 ### TREG
 
 Timestamped Register <sup>[[link](https://jemc.github.io/jylis/docs/types/treg/)]</sup>
