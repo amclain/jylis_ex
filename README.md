@@ -54,7 +54,6 @@ Multi-Value Register <sup>[[link](https://jemc.github.io/jylis/docs/types/mvreg/
 
 ```elixir
 {:ok, _} = connection |> Jylis.MVREG.set("thermostat", 68)
-# {:ok, "OK"}
 
 {:ok, value} = connection |> Jylis.MVREG.get("thermostat")
 # {:ok, ["68"]}
