@@ -1,4 +1,4 @@
-defmodule Jylis.MVREGSpec do
+defmodule Jylis.MVREG.Spec do
   use ESpec
 
   let :connection, do: self()
