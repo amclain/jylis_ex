@@ -34,3 +34,17 @@ of the database host to connect to. The `port` is optional and defaults to
 ```elixir
 {:ok, connection} = Jylis.start_link("jylis://host:port")
 ```
+
+## Queries
+
+### MVREG
+
+Multi-Value Register <sup>[[link](https://jemc.github.io/jylis/docs/types/mvreg/)]</sup>
+
+```elixir
+{:ok, _} = connection |> Jylis.MVREG.set("thermostat", 68)
+# {:ok, "OK"}
+
+{:ok, value} = connection |> Jylis.MVREG.get("thermostat")
+# {:ok, ["68"]}
+```
