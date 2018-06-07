@@ -161,3 +161,18 @@ Unordered JSON <sup>[[link](https://jemc.github.io/jylis/docs/types/ujson/)]</su
 #    "carol" => %{"admin" => true}
 #  }}
 ```
+
+### Raw Query
+
+If this library doesn't contain a function for the query you would like to
+perform, you can construct the query yourself by calling `Jylis.query`.
+However, be aware that this function is non-idiomatic and may require you to
+do your own pre/post processing on the data.
+
+```elixir
+{:ok, _} = connection |> Jylis.query(["TLOG", "INS", "temperature", 72.6, 5])
+# {:ok, "OK"}
+
+{:ok, value} = connection |> Jylis.query(["TLOG", "GET", "temperature"])
+# {:ok, [["73.6", 1528082170]]}
+```
