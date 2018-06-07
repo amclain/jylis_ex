@@ -1,6 +1,5 @@
 # jylis_ex
 
-
 [![Hex.pm](https://img.shields.io/hexpm/v/jylis_ex.svg)](https://hex.pm/packages/jylis_ex)
 [![Coverage Status](https://coveralls.io/repos/github/amclain/jylis_ex/badge.svg?branch=master)](https://coveralls.io/github/amclain/jylis_ex?branch=master)
 [![API Documentation](http://img.shields.io/badge/docs-api-blue.svg)](https://hexdocs.pm/jylis_ex)
@@ -36,6 +35,18 @@ of the database host to connect to. The `port` is optional and defaults to
 ```
 
 ## Queries
+
+### GCOUNT
+
+Grow-Only Counter <sup>[[link](https://jemc.github.io/jylis/docs/types/gcount/)]</sup>
+
+```elixir
+{:ok, _} = connection |> Jylis.GCOUNT.inc("mileage", 10)
+{:ok, _} = connection |> Jylis.GCOUNT.inc("mileage", 5)
+
+{:ok, value} = connection |> Jylis.GCOUNT.get("mileage")
+# {:ok, 15}
+```
 
 ### MVREG
 
