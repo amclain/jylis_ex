@@ -118,4 +118,20 @@ defmodule Integration.Spec do
       value |> should(eq 5)
     end
   end
+
+  describe "MVREG" do
+    let :connection do
+      {:ok, conn} = Jylis.start_link("jylis://localhost")
+      conn
+    end
+
+    finally do: connection() |> Jylis.stop
+
+    specify do
+      {:ok, _} = connection() |> Jylis.MVREG.set("temperature", 68)
+
+      {:ok, value} = connection() |> Jylis.MVREG.get("temperature")
+      value |> should(eq ["68"])
+    end
+  end
 end
