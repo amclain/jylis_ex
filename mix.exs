@@ -1,4 +1,4 @@
-defmodule JylisEx.MixProject do
+defmodule Jylis.MixProject do
   use Mix.Project
 
   def project do
