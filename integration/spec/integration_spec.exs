@@ -101,4 +101,21 @@ defmodule Integration.Spec do
       value |> should(eq 15)
     end
   end
+
+  describe "PNCOUNT" do
+    let :connection do
+      {:ok, conn} = Jylis.start_link("jylis://localhost")
+      conn
+    end
+
+    finally do: connection() |> Jylis.stop
+
+    specify do
+      {:ok, _} = connection() |> Jylis.PNCOUNT.inc("subscribers", 9)
+      {:ok, _} = connection() |> Jylis.PNCOUNT.dec("subscribers", 4)
+
+      {:ok, value} = connection() |> Jylis.PNCOUNT.get("subscribers")
+      value |> should(eq 5)
+    end
+  end
 end
