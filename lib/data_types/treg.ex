@@ -20,8 +20,17 @@ defmodule Jylis.TREG do
 
   @doc """
   Set a `value` and `timestamp` for the register at `key`.
+
+  `timestamp` - An integer Unix timestamp or an ISO 8601 formatted string.
   """
-  def set(connection, key, value, timestamp) do
+  def set(connection, key, value, timestamp) when is_integer(timestamp) do
     connection |> Jylis.query(["TREG", "SET", key, value, timestamp])
+  end
+
+  def set(connection, key, value, timestamp) when is_binary(timestamp) do
+    {:ok, date_time, _} = timestamp |> DateTime.from_iso8601
+    timestamp           = date_time |> DateTime.to_unix
+
+    set(connection, key, value, timestamp)
   end
 end

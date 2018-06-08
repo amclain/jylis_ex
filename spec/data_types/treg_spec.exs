@@ -5,6 +5,7 @@ defmodule Jylis.TREG.Spec do
   let :key,        do: "temperature"
   let :value,      do: 72.1
   let :timestamp,  do: 1528238308
+  let :iso8601,    do: "2018-06-05T22:38:28Z"
 
   describe "get" do
     specify do
@@ -36,17 +37,33 @@ defmodule Jylis.TREG.Spec do
     end
   end
 
-  specify "set" do
-    allow(Jylis).to accept(:query, fn(conn, params) ->
-      conn   |> should(eq connection())
-      params |> should(eq ["TREG", "SET", key(), value(), timestamp()])
+  describe "set" do
+    specify do
+      allow(Jylis).to accept(:query, fn(conn, params) ->
+        conn   |> should(eq connection())
+        params |> should(eq ["TREG", "SET", key(), value(), timestamp()])
 
-      {:ok, "OK"}
-    end)
+        {:ok, "OK"}
+      end)
 
-    Jylis.TREG.set(connection(), key(), value(), timestamp())
-    |> should(eq {:ok, "OK"})
+      Jylis.TREG.set(connection(), key(), value(), timestamp())
+      |> should(eq {:ok, "OK"})
 
-    expect(Jylis).to accepted(:query)
+      expect(Jylis).to accepted(:query)
+    end
+
+    specify "with iso8601 timestamp" do
+      allow(Jylis).to accept(:query, fn(conn, params) ->
+        conn   |> should(eq connection())
+        params |> should(eq ["TREG", "SET", key(), value(), timestamp()])
+
+        {:ok, "OK"}
+      end)
+
+      Jylis.TREG.set(connection(), key(), value(), iso8601())
+      |> should(eq {:ok, "OK"})
+
+      expect(Jylis).to accepted(:query)
+    end
   end
 end

@@ -25,13 +25,27 @@ defmodule Integration.Spec do
   finally   do: connection() |> Jylis.stop
   after_all do: stop_server()
 
-  specify "TREG" do
-    {:ok, _} = connection() |> Jylis.TREG.set("temperature", 72.1, 1528238308)
+  describe "TREG" do
+    specify do
+      {:ok, _} = connection() |> Jylis.TREG.set("temperature", 72.1, 1528238308)
 
-    {:ok, {value, timestamp}} = connection() |> Jylis.TREG.get("temperature")
+      {:ok, {value, timestamp}} = connection() |> Jylis.TREG.get("temperature")
 
-    timestamp |> should(eq 1528238308)
-    value     |> should(eq "72.1")
+      timestamp |> should(eq 1528238308)
+      value     |> should(eq "72.1")
+    end
+
+    specify "with iso8601 timestamp" do
+      {:ok, _} =
+        connection()
+        |> Jylis.TREG.set("temperature", 72.1, "2018-06-05T22:38:28Z")
+
+      {:ok, result}      = connection() |> Jylis.TREG.get("temperature")
+      {value, timestamp} = result       |> Jylis.Result.to_iso8601
+
+      timestamp |> should(eq "2018-06-05T22:38:28Z")
+      value     |> should(eq "72.1")
+    end
   end
 
   specify "TLOG" do
