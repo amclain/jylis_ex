@@ -48,43 +48,82 @@ defmodule Integration.Spec do
     end
   end
 
-  specify "TLOG" do
-    {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 68, 1528238310)
-    {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 70, 1528238320)
-    {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 73, 1528238330)
+  describe "TLOG" do
+    specify do
+      {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 68, 1528238310)
+      {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 70, 1528238320)
+      {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 73, 1528238330)
 
-    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-    values |> should(eq [
-      {"73", 1528238330},
-      {"70", 1528238320},
-      {"68", 1528238310},
-    ])
+      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+      values |> should(eq [
+        {"73", 1528238330},
+        {"70", 1528238320},
+        {"68", 1528238310},
+      ])
 
-    {:ok, size} = connection() |> Jylis.TLOG.size("temperature")
-    size |> should(eq 3)
+      {:ok, size} = connection() |> Jylis.TLOG.size("temperature")
+      size |> should(eq 3)
 
-    {:ok, _} = connection() |> Jylis.TLOG.trimat("temperature", 1528238320)
+      {:ok, _} = connection() |> Jylis.TLOG.trimat("temperature", 1528238320)
 
-    {:ok, cutoff} = connection() |> Jylis.TLOG.cutoff("temperature")
-    cutoff |> should(eq 1528238320)
+      {:ok, cutoff} = connection() |> Jylis.TLOG.cutoff("temperature")
+      cutoff |> should(eq 1528238320)
 
-    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-    values |> should(eq [
-      {"73", 1528238330},
-      {"70", 1528238320},
-    ])
+      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+      values |> should(eq [
+        {"73", 1528238330},
+        {"70", 1528238320},
+      ])
 
-    {:ok, _} = connection() |> Jylis.TLOG.trim("temperature", 1)
+      {:ok, _} = connection() |> Jylis.TLOG.trim("temperature", 1)
 
-    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-    values |> should(eq [
-      {"73", 1528238330},
-    ])
+      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+      values |> should(eq [
+        {"73", 1528238330},
+      ])
 
-    {:ok, _} = connection() |> Jylis.TLOG.clr("temperature")
+      {:ok, _} = connection() |> Jylis.TLOG.clr("temperature")
 
-    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-    values |> should(eq [])
+      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+      values |> should(eq [])
+    end
+
+    specify "with iso8601 timestamp" do
+      {:ok, _} =
+        connection()
+        |> Jylis.TLOG.ins("temperature", 68, "2018-06-05T22:38:30Z")
+
+      {:ok, _} =
+        connection()
+        |> Jylis.TLOG.ins("temperature", 70, "2018-06-05T22:38:40Z")
+
+      {:ok, _} =
+        connection()
+        |> Jylis.TLOG.ins("temperature", 73, "2018-06-05T22:38:50Z")
+
+      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+
+      values
+      |> Enum.map(&Jylis.Result.to_iso8601/1)
+      |> should(eq [
+        {"73", "2018-06-05T22:38:50Z"},
+        {"70", "2018-06-05T22:38:40Z"},
+        {"68", "2018-06-05T22:38:30Z"},
+      ])
+
+      {:ok, _} =
+        connection()
+        |> Jylis.TLOG.trimat("temperature", "2018-06-05T22:38:40Z")
+
+      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+
+      values
+      |> Enum.map(&Jylis.Result.to_iso8601/1)
+      |> should(eq [
+        {"73", "2018-06-05T22:38:50Z"},
+        {"70", "2018-06-05T22:38:40Z"},
+      ])
+    end
   end
 
   specify "GCOUNT" do

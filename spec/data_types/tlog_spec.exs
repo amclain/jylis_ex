@@ -6,6 +6,7 @@ defmodule Jylis.TLOG.Spec do
   let :count,      do: 20
   let :value,      do: 72.1
   let :timestamp,  do: 1528238308
+  let :iso8601,    do: "2018-06-05T22:38:28Z"
 
   describe "get" do
     specify do
@@ -43,18 +44,34 @@ defmodule Jylis.TLOG.Spec do
     end
   end
 
-  specify "ins" do
-    allow(Jylis).to accept(:query, fn(conn, params) ->
-      conn   |> should(eq connection())
-      params |> should(eq ["TLOG", "INS", key(), value(), timestamp()])
+  describe "ins" do
+    specify do
+      allow(Jylis).to accept(:query, fn(conn, params) ->
+        conn   |> should(eq connection())
+        params |> should(eq ["TLOG", "INS", key(), value(), timestamp()])
 
-      {:ok, "OK"}
-    end)
+        {:ok, "OK"}
+      end)
 
-    Jylis.TLOG.ins(connection(), key(), value(), timestamp())
-    |> should(eq {:ok, "OK"})
+      Jylis.TLOG.ins(connection(), key(), value(), timestamp())
+      |> should(eq {:ok, "OK"})
 
-    expect(Jylis).to accepted(:query)
+      expect(Jylis).to accepted(:query)
+    end
+
+    specify "with iso8601 timestamp" do
+      allow(Jylis).to accept(:query, fn(conn, params) ->
+        conn   |> should(eq connection())
+        params |> should(eq ["TLOG", "INS", key(), value(), timestamp()])
+
+        {:ok, "OK"}
+      end)
+
+      Jylis.TLOG.ins(connection(), key(), value(), iso8601())
+      |> should(eq {:ok, "OK"})
+
+      expect(Jylis).to accepted(:query)
+    end
   end
 
   specify "size" do
@@ -83,17 +100,34 @@ defmodule Jylis.TLOG.Spec do
     expect(Jylis).to accepted(:query)
   end
 
-  specify "trimat" do
-    allow(Jylis).to accept(:query, fn(conn, params) ->
-      conn   |> should(eq connection())
-      params |> should(eq ["TLOG", "TRIMAT", key(), timestamp()])
+  describe "trimat" do
+    specify do
+      allow(Jylis).to accept(:query, fn(conn, params) ->
+        conn   |> should(eq connection())
+        params |> should(eq ["TLOG", "TRIMAT", key(), timestamp()])
 
-      {:ok, "OK"}
-    end)
+        {:ok, "OK"}
+      end)
 
-    Jylis.TLOG.trimat(connection(), key(), timestamp()) |> should(eq {:ok, "OK"})
+      Jylis.TLOG.trimat(connection(), key(), timestamp())
+      |> should(eq {:ok, "OK"})
 
-    expect(Jylis).to accepted(:query)
+      expect(Jylis).to accepted(:query)
+    end
+
+    specify "with iso8601 timestamp" do
+      allow(Jylis).to accept(:query, fn(conn, params) ->
+        conn   |> should(eq connection())
+        params |> should(eq ["TLOG", "TRIMAT", key(), timestamp()])
+
+        {:ok, "OK"}
+      end)
+
+      Jylis.TLOG.trimat(connection(), key(), iso8601())
+      |> should(eq {:ok, "OK"})
+
+      expect(Jylis).to accepted(:query)
+    end
   end
 
   specify "trim" do

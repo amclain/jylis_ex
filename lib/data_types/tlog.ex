@@ -23,9 +23,18 @@ defmodule Jylis.TLOG do
 
   @doc """
   Insert a `value`/`timestamp` entry into the log at `key`.
+
+  `timestamp` - An integer Unix timestamp or an ISO 8601 formatted string.
   """
-  def ins(connection, key, value, timestamp) do
+  def ins(connection, key, value, timestamp) when is_integer(timestamp) do
     connection |> Jylis.query(["TLOG", "INS", key, value, timestamp])
+  end
+
+  def ins(connection, key, value, timestamp) when is_binary(timestamp) do
+    {:ok, date_time, _} = timestamp |> DateTime.from_iso8601
+    timestamp           = date_time |> DateTime.to_unix
+
+    ins(connection, key, value, timestamp)
   end
 
   @doc """
@@ -45,9 +54,18 @@ defmodule Jylis.TLOG do
   @doc """
   Raise the cutoff timestamp of the log, causing any entries to be discarded
   whose timestamp is earlier than the newly given `timestamp`.
+
+  `timestamp` - An integer Unix timestamp or an ISO 8601 formatted string.
   """
-  def trimat(connection, key, timestamp) do
+  def trimat(connection, key, timestamp) when is_integer(timestamp) do
     connection |> Jylis.query(["TLOG", "TRIMAT", key, timestamp])
+  end
+
+  def trimat(connection, key, timestamp) when is_binary(timestamp) do
+    {:ok, date_time, _} = timestamp |> DateTime.from_iso8601
+    timestamp           = date_time |> DateTime.to_unix
+
+    trimat(connection, key, timestamp)
   end
 
   @doc """
