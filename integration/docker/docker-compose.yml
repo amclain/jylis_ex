@@ -1,0 +1,6 @@
+version: "3"
+services:
+  db:
+    image: jemc/jylis
+    ports:
+      - "6379:6379"
