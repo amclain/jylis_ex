@@ -72,6 +72,23 @@ defmodule Jylis.Spec do
     end
   end
 
+  describe "stop" do
+    let :connection, do: self()
+
+    specify do
+      allow(Redix).to accept(:stop, fn(conn, timeout) ->
+        conn    |> should(eq connection())
+        timeout |> should(eq :infinity)
+
+        :ok
+      end)
+
+      Jylis.stop(connection()) |> should(eq :ok)
+
+      expect(Redix).to accepted(:stop)
+    end
+  end
+
   describe "query" do
     let :connection, do: self()
     let :command,    do: ["MVREG", "GET", "temperature"]

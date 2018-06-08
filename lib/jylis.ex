@@ -27,6 +27,15 @@ defmodule Jylis do
   end
 
   @doc """
+  Close a connection to Jylis.
+
+  `timeout` - Timeout in milliseconds.
+  """
+  def stop(connection, timeout \\ :infinity) do
+    connection |> Redix.stop(timeout)
+  end
+
+  @doc """
   Make a query to the database.
 
   `command` - A `List` of command parameters. The command follows the format
