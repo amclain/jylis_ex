@@ -18,4 +18,22 @@ defmodule Integration.Spec do
   # to purge the database.
   before  do: reset_server()
   finally do: stop_server()
+
+  describe "TREG" do
+    let :connection do
+      {:ok, conn} = Jylis.start_link("jylis://localhost")
+      conn
+    end
+
+    finally do: connection() |> Jylis.stop
+
+    specify do
+      {:ok, _} = connection() |> Jylis.TREG.set("temperature", 72.1, 1528238308)
+
+      {:ok, {value, timestamp}} = connection() |> Jylis.TREG.get("temperature")
+
+      timestamp |> should(eq 1528238308)
+      value     |> should(eq "72.1")
+    end
+  end
 end
