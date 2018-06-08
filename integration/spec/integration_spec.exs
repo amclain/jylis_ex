@@ -21,12 +21,9 @@ defmodule Integration.Spec do
 
   # Since Jylis is an in-memory database, we restart it between each test group
   # to purge the database.
-  before do: reset_server()
-
-  finally do
-    connection() |> Jylis.stop
-    stop_server()
-  end
+  before    do: reset_server()
+  finally   do: connection() |> Jylis.stop
+  after_all do: stop_server()
 
   specify "TREG" do
     {:ok, _} = connection() |> Jylis.TREG.set("temperature", 72.1, 1528238308)
