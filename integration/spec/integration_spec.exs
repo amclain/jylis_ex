@@ -84,4 +84,21 @@ defmodule Integration.Spec do
       values |> should(eq [])
     end
   end
+
+  describe "GCOUNT" do
+    let :connection do
+      {:ok, conn} = Jylis.start_link("jylis://localhost")
+      conn
+    end
+
+    finally do: connection() |> Jylis.stop
+
+    specify do
+      {:ok, _} = connection() |> Jylis.GCOUNT.inc("mileage", 5)
+      {:ok, _} = connection() |> Jylis.GCOUNT.inc("mileage", 10)
+
+      {:ok, value} = connection() |> Jylis.GCOUNT.get("mileage")
+      value |> should(eq 15)
+    end
+  end
 end
