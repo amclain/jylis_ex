@@ -176,3 +176,20 @@ do your own pre/post processing on the data.
 {:ok, value} = connection |> Jylis.query(["TLOG", "GET", "temperature"])
 # {:ok, [["73.6", 1528082170]]}
 ```
+
+### Timestamps
+
+In addition to supporting integer timestamps as defined by the Jylis spec, this
+library also has helpers to convert the Jylis `Timestamped` data types to/from
+ISO 8601. Functions that have a `timestamp` parameter will automatically convert
+an ISO 8601 string to a Unix timestamp.
+
+```elixir
+{:ok, _} = connection |> Jylis.TREG.set("volume", 64, "2018-06-06T01:42:57Z")
+
+{:ok, result} = connection |> Jylis.TREG.get("volume")
+# {:ok, {"64", 1528249377}}
+
+result |> Jylis.Result.to_iso8601
+# {"64", "2018-06-06T01:42:57Z"}
+```
