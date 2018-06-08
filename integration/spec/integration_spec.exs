@@ -134,4 +134,61 @@ defmodule Integration.Spec do
       value |> should(eq ["68"])
     end
   end
+
+  describe "UJSON" do
+    let :connection do
+      {:ok, conn} = Jylis.start_link("jylis://localhost")
+      conn
+    end
+
+    finally do: connection() |> Jylis.stop
+
+    specify "hash values" do
+      {:ok, _} = connection() |> Jylis.UJSON.set(["users", "alice"], %{admin: false})
+      {:ok, _} = connection() |> Jylis.UJSON.set(["users", "brett"], %{admin: false})
+      {:ok, _} = connection() |> Jylis.UJSON.set(["users", "carol"], %{admin: true})
+
+      {:ok, users} = connection() |> Jylis.UJSON.get("users")
+      users |> should(eq %{
+        "alice" => %{"admin" => false},
+        "brett" => %{"admin" => false},
+        "carol" => %{"admin" => true},
+      })
+
+      {:ok, _} = connection() |> Jylis.UJSON.ins(["users", "brett", "banned"], true)
+
+      {:ok, users} = connection() |> Jylis.UJSON.get("users")
+      users |> should(eq %{
+        "alice" => %{"admin" => false},
+        "brett" => %{"admin" => false, "banned" => true},
+        "carol" => %{"admin" => true},
+      })
+
+      {:ok, _} = connection() |> Jylis.UJSON.clr(["users", "alice"])
+
+      {:ok, users} = connection() |> Jylis.UJSON.get("users")
+      users |> should(eq %{
+        "brett" => %{"admin" => false, "banned" => true},
+        "carol" => %{"admin" => true},
+      })
+    end
+
+    specify "array values" do
+      {:ok, _} = connection() |> Jylis.UJSON.ins("admins", "carol")
+
+      {:ok, admins} = connection() |> Jylis.UJSON.get("admins")
+      admins |> should(eq "carol")
+
+      {:ok, _} = connection() |> Jylis.UJSON.ins("admins", "alice")
+
+      {:ok, admins} = connection() |> Jylis.UJSON.get("admins")
+      # List is sorted because order is nondeterministic.
+      admins |> Enum.sort |> should(eq ["alice", "carol"])
+
+      {:ok, _} = connection() |> Jylis.UJSON.rm("admins", "carol")
+
+      {:ok, admins} = connection() |> Jylis.UJSON.get("admins")
+      admins |> should(eq "alice")
+    end
+  end
 end
