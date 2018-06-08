@@ -14,135 +14,92 @@ defmodule Integration.Spec do
     start_server()
   end
 
+  let :connection do
+    {:ok, conn} = Jylis.start_link("jylis://localhost")
+    conn
+  end
+
   # Since Jylis is an in-memory database, we restart it between each test group
   # to purge the database.
-  before  do: reset_server()
-  finally do: stop_server()
+  before do: reset_server()
 
-  describe "TREG" do
-    let :connection do
-      {:ok, conn} = Jylis.start_link("jylis://localhost")
-      conn
-    end
-
-    finally do: connection() |> Jylis.stop
-
-    specify do
-      {:ok, _} = connection() |> Jylis.TREG.set("temperature", 72.1, 1528238308)
-
-      {:ok, {value, timestamp}} = connection() |> Jylis.TREG.get("temperature")
-
-      timestamp |> should(eq 1528238308)
-      value     |> should(eq "72.1")
-    end
+  finally do
+    connection() |> Jylis.stop
+    stop_server()
   end
 
-  describe "TLOG" do
-    let :connection do
-      {:ok, conn} = Jylis.start_link("jylis://localhost")
-      conn
-    end
+  specify "TREG" do
+    {:ok, _} = connection() |> Jylis.TREG.set("temperature", 72.1, 1528238308)
 
-    finally do: connection() |> Jylis.stop
+    {:ok, {value, timestamp}} = connection() |> Jylis.TREG.get("temperature")
 
-    specify do
-      {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 68, 1528238310)
-      {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 70, 1528238320)
-      {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 73, 1528238330)
-
-      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-      values |> should(eq [
-        {"73", 1528238330},
-        {"70", 1528238320},
-        {"68", 1528238310},
-      ])
-
-      {:ok, size} = connection() |> Jylis.TLOG.size("temperature")
-      size |> should(eq 3)
-
-      {:ok, _} = connection() |> Jylis.TLOG.trimat("temperature", 1528238320)
-
-      {:ok, cutoff} = connection() |> Jylis.TLOG.cutoff("temperature")
-      cutoff |> should(eq 1528238320)
-
-      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-      values |> should(eq [
-        {"73", 1528238330},
-        {"70", 1528238320},
-      ])
-
-      {:ok, _} = connection() |> Jylis.TLOG.trim("temperature", 1)
-
-      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-      values |> should(eq [
-        {"73", 1528238330},
-      ])
-
-      {:ok, _} = connection() |> Jylis.TLOG.clr("temperature")
-
-      {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
-      values |> should(eq [])
-    end
+    timestamp |> should(eq 1528238308)
+    value     |> should(eq "72.1")
   end
 
-  describe "GCOUNT" do
-    let :connection do
-      {:ok, conn} = Jylis.start_link("jylis://localhost")
-      conn
-    end
+  specify "TLOG" do
+    {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 68, 1528238310)
+    {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 70, 1528238320)
+    {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 73, 1528238330)
 
-    finally do: connection() |> Jylis.stop
+    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+    values |> should(eq [
+      {"73", 1528238330},
+      {"70", 1528238320},
+      {"68", 1528238310},
+    ])
 
-    specify do
-      {:ok, _} = connection() |> Jylis.GCOUNT.inc("mileage", 5)
-      {:ok, _} = connection() |> Jylis.GCOUNT.inc("mileage", 10)
+    {:ok, size} = connection() |> Jylis.TLOG.size("temperature")
+    size |> should(eq 3)
 
-      {:ok, value} = connection() |> Jylis.GCOUNT.get("mileage")
-      value |> should(eq 15)
-    end
+    {:ok, _} = connection() |> Jylis.TLOG.trimat("temperature", 1528238320)
+
+    {:ok, cutoff} = connection() |> Jylis.TLOG.cutoff("temperature")
+    cutoff |> should(eq 1528238320)
+
+    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+    values |> should(eq [
+      {"73", 1528238330},
+      {"70", 1528238320},
+    ])
+
+    {:ok, _} = connection() |> Jylis.TLOG.trim("temperature", 1)
+
+    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+    values |> should(eq [
+      {"73", 1528238330},
+    ])
+
+    {:ok, _} = connection() |> Jylis.TLOG.clr("temperature")
+
+    {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
+    values |> should(eq [])
   end
 
-  describe "PNCOUNT" do
-    let :connection do
-      {:ok, conn} = Jylis.start_link("jylis://localhost")
-      conn
-    end
+  specify "GCOUNT" do
+    {:ok, _} = connection() |> Jylis.GCOUNT.inc("mileage", 5)
+    {:ok, _} = connection() |> Jylis.GCOUNT.inc("mileage", 10)
 
-    finally do: connection() |> Jylis.stop
-
-    specify do
-      {:ok, _} = connection() |> Jylis.PNCOUNT.inc("subscribers", 9)
-      {:ok, _} = connection() |> Jylis.PNCOUNT.dec("subscribers", 4)
-
-      {:ok, value} = connection() |> Jylis.PNCOUNT.get("subscribers")
-      value |> should(eq 5)
-    end
+    {:ok, value} = connection() |> Jylis.GCOUNT.get("mileage")
+    value |> should(eq 15)
   end
 
-  describe "MVREG" do
-    let :connection do
-      {:ok, conn} = Jylis.start_link("jylis://localhost")
-      conn
-    end
+  specify "PNCOUNT" do
+    {:ok, _} = connection() |> Jylis.PNCOUNT.inc("subscribers", 9)
+    {:ok, _} = connection() |> Jylis.PNCOUNT.dec("subscribers", 4)
 
-    finally do: connection() |> Jylis.stop
+    {:ok, value} = connection() |> Jylis.PNCOUNT.get("subscribers")
+    value |> should(eq 5)
+  end
 
-    specify do
-      {:ok, _} = connection() |> Jylis.MVREG.set("temperature", 68)
+  specify "MVREG" do
+    {:ok, _} = connection() |> Jylis.MVREG.set("temperature", 68)
 
-      {:ok, value} = connection() |> Jylis.MVREG.get("temperature")
-      value |> should(eq ["68"])
-    end
+    {:ok, value} = connection() |> Jylis.MVREG.get("temperature")
+    value |> should(eq ["68"])
   end
 
   describe "UJSON" do
-    let :connection do
-      {:ok, conn} = Jylis.start_link("jylis://localhost")
-      conn
-    end
-
-    finally do: connection() |> Jylis.stop
-
     specify "hash values" do
       {:ok, _} = connection() |> Jylis.UJSON.set(["users", "alice"], %{admin: false})
       {:ok, _} = connection() |> Jylis.UJSON.set(["users", "brett"], %{admin: false})
