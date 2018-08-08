@@ -25,6 +25,26 @@ defmodule Integration.Spec do
   finally   do: connection() |> Jylis.stop
   after_all do: stop_server()
 
+  describe "named process" do
+    let :process_name, do: :db
+
+    finally do
+      if Process.whereis(process_name()), do: Jylis.stop(process_name())
+    end
+
+    specify do
+      {:ok, _conn} = Jylis.start_link("jylis://localhost", name: process_name())
+
+      Process.whereis(process_name()) |> should_not(eq nil)
+
+      {:ok, result} =
+        process_name()
+        |> Jylis.query(["MVREG", "GET", "process_name_test"]);
+
+      result |> should(eq [])
+    end
+  end
+
   describe "TREG" do
     specify do
       {:ok, _} = connection() |> Jylis.TREG.set("temperature", 72.1, 1528238308)

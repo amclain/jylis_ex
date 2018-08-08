@@ -8,9 +8,9 @@ defmodule Jylis.Spec do
   describe "start_link" do
     describe "server URI" do
       specify do
-        allow Redix |> to(accept :start_link, fn(opts) ->
-          opts[:host] |> should(eq server_host())
-          opts[:port] |> should(eq server_port())
+        allow Redix |> to(accept :start_link, fn(redix_opts, _other_opts) ->
+          redix_opts[:host] |> should(eq server_host())
+          redix_opts[:port] |> should(eq server_port())
 
           {:ok, self()}
         end)
@@ -24,9 +24,9 @@ defmodule Jylis.Spec do
         let :server_uri, do: "jylis://db"
 
         specify do
-          allow Redix |> to(accept :start_link, fn(opts) ->
-            opts[:host] |> should(eq "db")
-            opts[:port] |> should(eq 6379)
+          allow Redix |> to(accept :start_link, fn(redix_opts, _other_opts) ->
+            redix_opts[:host] |> should(eq "db")
+            redix_opts[:port] |> should(eq 6379)
 
             {:ok, self()}
           end)
@@ -41,9 +41,9 @@ defmodule Jylis.Spec do
         let :server_uri, do: "jylis://db:5000"
 
         specify do
-          allow Redix |> to(accept :start_link, fn(opts) ->
-            opts[:host] |> should(eq "db")
-            opts[:port] |> should(eq 5000)
+          allow Redix |> to(accept :start_link, fn(redix_opts, _other_opts) ->
+            redix_opts[:host] |> should(eq "db")
+            redix_opts[:port] |> should(eq 5000)
 
             {:ok, self()}
           end)
@@ -67,6 +67,25 @@ defmodule Jylis.Spec do
 
         specify do
           Jylis.start_link(server_uri()) |> should(eq {:error, :invalid_host})
+        end
+      end
+
+      describe "with a process name" do
+        specify do
+          process_name = :db
+
+          allow Redix |> to(accept :start_link, fn(redix_opts, other_opts) ->
+          redix_opts[:host] |> should(eq server_host())
+          redix_opts[:port] |> should(eq server_port())
+          other_opts[:name] |> should(eq process_name)
+
+          {:ok, self()}
+        end)
+
+        Jylis.start_link(server_uri(), name: process_name)
+        |> should(eq {:ok, self()})
+
+        expect Redix |> to(accepted :start_link)
         end
       end
     end
