@@ -13,7 +13,7 @@ defmodule Jylis.UJSON.Spec do
 
   describe "get" do
     specify "with a single key" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["UJSON", "GET", key()])
 
@@ -22,11 +22,11 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.get(connection(), key()) |> should(eq {:ok, values()})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with multiple keys" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["UJSON", "GET", key(), key2()])
 
@@ -37,11 +37,11 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.get(connection(), keys) |> should(eq {:ok, value()})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     it "passes through errors" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["UJSON", "GET", key()])
 
@@ -50,13 +50,13 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.get(connection(), key()) |> should(eq {:error, nil})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   describe "set" do
     specify "with a single key" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq [
           "UJSON",
@@ -70,11 +70,11 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.set(connection(), key(), values()) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with multiple keys" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq [
           "UJSON",
@@ -91,13 +91,13 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.set(connection(), keys, value()) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   describe "clr" do
     specify "with a single key" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["UJSON", "CLR", key()])
 
@@ -106,11 +106,11 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.clr(connection(), key()) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with multiple keys" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["UJSON", "CLR", key(), key2()])
 
@@ -121,13 +121,13 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.clr(connection(), keys) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   describe "ins" do
     specify "with a single key" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["UJSON", "INS", key(), Poison.encode!(value())])
 
@@ -136,11 +136,11 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.ins(connection(), key(), value()) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with multiple keys" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq [
           "UJSON",
@@ -157,13 +157,13 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.ins(connection(), keys, value()) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   describe "rm" do
     specify "with a single key" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["UJSON", "RM", key(), Poison.encode!(value())])
 
@@ -172,11 +172,11 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.rm(connection(), key(), value()) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with multiple keys" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq [
           "UJSON",
@@ -193,7 +193,7 @@ defmodule Jylis.UJSON.Spec do
 
       Jylis.UJSON.rm(connection(), keys, value()) |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 end

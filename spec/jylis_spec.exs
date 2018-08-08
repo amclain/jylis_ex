@@ -8,7 +8,7 @@ defmodule Jylis.Spec do
   describe "start_link" do
     describe "server URI" do
       specify do
-        allow(Redix).to accept(:start_link, fn(opts) ->
+        allow Redix |> to(accept :start_link, fn(opts) ->
           opts[:host] |> should(eq server_host())
           opts[:port] |> should(eq server_port())
 
@@ -17,14 +17,14 @@ defmodule Jylis.Spec do
 
         Jylis.start_link(server_uri()) |> should(eq {:ok, self()})
 
-        expect(Redix).to accepted(:start_link)
+        expect Redix |> to(accepted :start_link)
       end
 
       describe "defaults to port 6379" do
         let :server_uri, do: "jylis://db"
 
         specify do
-          allow(Redix).to accept(:start_link, fn(opts) ->
+          allow Redix |> to(accept :start_link, fn(opts) ->
             opts[:host] |> should(eq "db")
             opts[:port] |> should(eq 6379)
 
@@ -33,7 +33,7 @@ defmodule Jylis.Spec do
 
           Jylis.start_link(server_uri()) |> should(eq {:ok, self()})
 
-          expect(Redix).to accepted(:start_link)
+          expect Redix |> to(accepted :start_link)
         end
       end
 
@@ -41,7 +41,7 @@ defmodule Jylis.Spec do
         let :server_uri, do: "jylis://db:5000"
 
         specify do
-          allow(Redix).to accept(:start_link, fn(opts) ->
+          allow Redix |> to(accept :start_link, fn(opts) ->
             opts[:host] |> should(eq "db")
             opts[:port] |> should(eq 5000)
 
@@ -50,7 +50,7 @@ defmodule Jylis.Spec do
 
           Jylis.start_link(server_uri()) |> should(eq {:ok, self()})
 
-          expect(Redix).to accepted(:start_link)
+          expect Redix |> to(accepted :start_link)
         end
       end
 
@@ -76,7 +76,7 @@ defmodule Jylis.Spec do
     let :connection, do: self()
 
     specify do
-      allow(Redix).to accept(:stop, fn(conn, timeout) ->
+      allow Redix |> to(accept :stop, fn(conn, timeout) ->
         conn    |> should(eq connection())
         timeout |> should(eq :infinity)
 
@@ -85,7 +85,7 @@ defmodule Jylis.Spec do
 
       Jylis.stop(connection()) |> should(eq :ok)
 
-      expect(Redix).to accepted(:stop)
+      expect Redix |> to(accepted :stop)
     end
   end
 
@@ -95,7 +95,7 @@ defmodule Jylis.Spec do
     let :value,      do: 25
 
     specify do
-      allow(Redix).to accept(:command, fn(conn, cmd) ->
+      allow Redix |> to(accept :command, fn(conn, cmd) ->
         conn |> should(eq self())
         cmd  |> should(eq command())
 
@@ -104,7 +104,7 @@ defmodule Jylis.Spec do
 
       Jylis.query(connection(), command()) |> should(eq {:ok, value()})
 
-      expect(Redix).to accepted(:command)
+      expect Redix |> to(accepted :command)
     end
   end
 end
