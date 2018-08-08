@@ -54,11 +54,19 @@ defmodule Integration.Spec do
       {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 70, 1528238320)
       {:ok, _} = connection() |> Jylis.TLOG.ins("temperature", 73, 1528238330)
 
+      # Get all values.
       {:ok, values} = connection() |> Jylis.TLOG.get("temperature")
       values |> should(eq [
         {"73", 1528238330},
         {"70", 1528238320},
         {"68", 1528238310},
+      ])
+
+      # Get the 2 latest values.
+      {:ok, values} = connection() |> Jylis.TLOG.get("temperature", 2)
+      values |> should(eq [
+        {"73", 1528238330},
+        {"70", 1528238320},
       ])
 
       {:ok, size} = connection() |> Jylis.TLOG.size("temperature")
