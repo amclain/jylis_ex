@@ -34,12 +34,12 @@ defmodule Jylis.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poison,      "~> 3.1.0"},
+      {:poison,      "~> 4.0.1"},
       {:redix,       "~> 0.7.1"},
       {:espec,       "~> 1.6.0",  only: :test},
-      {:excoveralls, "~> 0.8.2",  only: :test},
+      {:excoveralls, "~> 0.9.1",  only: :test},
       {:ex_doc,      "~> 0.18.4", only: :dev, runtime: false},
-      {:benchee,     "~> 0.13.1", only: :dev},
+      {:benchee,     "~> 0.13.2", only: :dev},
     ]
   end
 
