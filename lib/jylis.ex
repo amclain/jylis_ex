@@ -10,9 +10,12 @@ defmodule Jylis do
     be `jylis`. The `host` can be a valid hostname, IP address, or domain name.
     The `port` is optional and defaults to `6379`.
 
+  `opts`
+    * `name` - A name to register the process to.
+
   Returns `{:ok, pid}` on success, or `{:error, error}` on failure.
   """
-  def start_link(server_uri) do
+  def start_link(server_uri, opts \\ []) do
     server_uri = URI.parse(server_uri)
 
     case validate_uri(server_uri) do
@@ -21,8 +24,9 @@ defmodule Jylis do
 
       :ok ->
         port = server_uri.port || 6379
+        name = opts |> Keyword.get(:name)
 
-        Redix.start_link(host: server_uri.host, port: port)
+        Redix.start_link([host: server_uri.host, port: port], name: name)
     end
   end
 
