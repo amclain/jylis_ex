@@ -30,6 +30,27 @@ defmodule Jylis.TLOG.Spec do
       expect Jylis |> to(accepted :query)
     end
 
+    specify "with count" do
+      allow Jylis |> to(accept :query, fn(conn, params) ->
+        conn   |> should(eq connection())
+        params |> should(eq ["TLOG", "GET", key(), count()])
+
+        {:ok, [
+          ["68", 1],
+          ["70", 2],
+        ]}
+      end)
+
+      expected = [
+        {"68", 1},
+        {"70", 2},
+      ]
+
+      Jylis.TLOG.get(connection(), key(), count()) |> should(eq {:ok, expected})
+
+      expect Jylis |> to(accepted :query)
+    end
+
     it "passes through errors" do
       allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())

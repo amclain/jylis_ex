@@ -9,8 +9,16 @@ defmodule Jylis.TLOG do
 
   Returns `{:ok, [{value, timestamp}, ...]}` on success.
   """
-  def get(connection, key) do
-    result = connection |> Jylis.query(["TLOG", "GET", key])
+  def get(connection, key, count \\ nil) do
+    query = ["TLOG", "GET", key]
+
+    query =
+      case count do
+        nil -> query
+        _   -> query ++ [count]
+      end
+
+    result = connection |> Jylis.query(query)
 
     case result do
       {:ok, items} ->
