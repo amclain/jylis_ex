@@ -9,7 +9,7 @@ defmodule Jylis.TREG.Spec do
 
   describe "get" do
     specify do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TREG", "GET", key()])
 
@@ -20,11 +20,11 @@ defmodule Jylis.TREG.Spec do
 
       Jylis.TREG.get(connection(), key()) |> should(eq {:ok, expected})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     it "passes through errors" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TREG", "GET", key()])
 
@@ -33,13 +33,13 @@ defmodule Jylis.TREG.Spec do
 
       Jylis.TREG.get(connection(), key()) |> should(eq {:error, nil})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   describe "set" do
     specify do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TREG", "SET", key(), value(), timestamp()])
 
@@ -49,11 +49,11 @@ defmodule Jylis.TREG.Spec do
       Jylis.TREG.set(connection(), key(), value(), timestamp())
       |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with iso8601 timestamp" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TREG", "SET", key(), value(), timestamp()])
 
@@ -63,7 +63,7 @@ defmodule Jylis.TREG.Spec do
       Jylis.TREG.set(connection(), key(), value(), iso8601())
       |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 end

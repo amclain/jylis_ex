@@ -24,7 +24,7 @@ defmodule Integration.MixProject do
   defp deps do
     [
       {:jylis_ex, ">= 0.0.0", path: ".."},
-      {:espec,    "~> 1.5.1", only: :test},
+      {:espec,    "~> 1.6.0", only: :test},
     ]
   end
 end

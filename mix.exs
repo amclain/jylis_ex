@@ -36,7 +36,7 @@ defmodule Jylis.MixProject do
     [
       {:poison,      "~> 3.1.0"},
       {:redix,       "~> 0.7.1"},
-      {:espec,       "~> 1.5.1",  only: :test},
+      {:espec,       "~> 1.6.0",  only: :test},
       {:excoveralls, "~> 0.8.2",  only: :test},
       {:ex_doc,      "~> 0.18.4", only: :dev, runtime: false},
       {:benchee,     "~> 0.13.1", only: :dev},

@@ -10,7 +10,7 @@ defmodule Jylis.TLOG.Spec do
 
   describe "get" do
     specify do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TLOG", "GET", key()])
 
@@ -27,11 +27,11 @@ defmodule Jylis.TLOG.Spec do
 
       Jylis.TLOG.get(connection(), key()) |> should(eq {:ok, expected})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     it "passes through errors" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TLOG", "GET", key()])
 
@@ -40,13 +40,13 @@ defmodule Jylis.TLOG.Spec do
 
       Jylis.TLOG.get(connection(), key()) |> should(eq {:error, nil})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   describe "ins" do
     specify do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TLOG", "INS", key(), value(), timestamp()])
 
@@ -56,11 +56,11 @@ defmodule Jylis.TLOG.Spec do
       Jylis.TLOG.ins(connection(), key(), value(), timestamp())
       |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with iso8601 timestamp" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TLOG", "INS", key(), value(), timestamp()])
 
@@ -70,12 +70,12 @@ defmodule Jylis.TLOG.Spec do
       Jylis.TLOG.ins(connection(), key(), value(), iso8601())
       |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   specify "size" do
-    allow(Jylis).to accept(:query, fn(conn, params) ->
+    allow Jylis |> to(accept :query, fn(conn, params) ->
       conn   |> should(eq connection())
       params |> should(eq ["TLOG", "SIZE", key()])
 
@@ -84,11 +84,11 @@ defmodule Jylis.TLOG.Spec do
 
     Jylis.TLOG.size(connection(), key()) |> should(eq {:ok, 1})
 
-    expect(Jylis).to accepted(:query)
+    expect Jylis |> to(accepted :query)
   end
 
   specify "cutoff" do
-    allow(Jylis).to accept(:query, fn(conn, params) ->
+    allow Jylis |> to(accept :query, fn(conn, params) ->
       conn   |> should(eq connection())
       params |> should(eq ["TLOG", "CUTOFF", key()])
 
@@ -97,12 +97,12 @@ defmodule Jylis.TLOG.Spec do
 
     Jylis.TLOG.cutoff(connection(), key()) |> should(eq {:ok, 0})
 
-    expect(Jylis).to accepted(:query)
+    expect Jylis |> to(accepted :query)
   end
 
   describe "trimat" do
     specify do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TLOG", "TRIMAT", key(), timestamp()])
 
@@ -112,11 +112,11 @@ defmodule Jylis.TLOG.Spec do
       Jylis.TLOG.trimat(connection(), key(), timestamp())
       |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
 
     specify "with iso8601 timestamp" do
-      allow(Jylis).to accept(:query, fn(conn, params) ->
+      allow Jylis |> to(accept :query, fn(conn, params) ->
         conn   |> should(eq connection())
         params |> should(eq ["TLOG", "TRIMAT", key(), timestamp()])
 
@@ -126,12 +126,12 @@ defmodule Jylis.TLOG.Spec do
       Jylis.TLOG.trimat(connection(), key(), iso8601())
       |> should(eq {:ok, "OK"})
 
-      expect(Jylis).to accepted(:query)
+      expect Jylis |> to(accepted :query)
     end
   end
 
   specify "trim" do
-    allow(Jylis).to accept(:query, fn(conn, params) ->
+    allow Jylis |> to(accept :query, fn(conn, params) ->
       conn   |> should(eq connection())
       params |> should(eq ["TLOG", "TRIM", key(), count()])
 
@@ -140,11 +140,11 @@ defmodule Jylis.TLOG.Spec do
 
     Jylis.TLOG.trim(connection(), key(), count()) |> should(eq {:ok, "OK"})
 
-    expect(Jylis).to accepted(:query)
+    expect Jylis |> to(accepted :query)
   end
 
   specify "clr" do
-    allow(Jylis).to accept(:query, fn(conn, params) ->
+    allow Jylis |> to(accept :query, fn(conn, params) ->
       conn   |> should(eq connection())
       params |> should(eq ["TLOG", "CLR", key()])
 
@@ -153,6 +153,6 @@ defmodule Jylis.TLOG.Spec do
 
     Jylis.TLOG.clr(connection(), key()) |> should(eq {:ok, "OK"})
 
-    expect(Jylis).to accepted(:query)
+    expect Jylis |> to(accepted :query)
   end
 end
