@@ -6,7 +6,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-yellowgreen.svg)](https://github.com/amclain/jylis_ex/blob/master/license.txt)
 
 An idiomatic library for connecting an Elixir project to a
-[Jylis](https://github.com/jemc/jylis) database.
+[Jylis](https://github.com/jemc/jylis) CRDT database.
 
 > Jylis is a distributed in-memory database for Conflict-free Replicated Data
 > Types (CRDTs), built for speed, scalability, availability, and ease of use.
